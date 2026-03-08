@@ -5,6 +5,19 @@ import './globals.css'
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
+// Initialize app on server startup
+async function initApp() {
+  try {
+    const { initializeApp } = await import('@/lib/init');
+    await initializeApp();
+  } catch (error) {
+    console.warn('[v0] App initialization warning:', error instanceof Error ? error.message : 'Unknown error');
+  }
+}
+
+// Call init on server startup
+initApp().catch(err => console.warn('[v0] Init error:', err));
+
 export const metadata: Metadata = {
   title: 'Script Marketplace - Buy & Sell Website Templates',
   description: 'Browse and purchase premium website templates, scripts, and custom development services. Showcase your work with live demos.',
