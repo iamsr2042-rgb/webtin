@@ -6,7 +6,7 @@ export const isProduction = process.env.NODE_ENV === 'production';
 // Database configuration
 export const databaseUrl = process.env.DATABASE_URL;
 
-if (!databaseUrl) {
+if (!databaseUrl && isProduction) {
   throw new Error('DATABASE_URL environment variable is not set');
 }
 

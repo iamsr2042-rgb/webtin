@@ -9,9 +9,13 @@ export function validateEnvironment(): {
   const errors: string[] = [];
   const warnings: string[] = [];
 
-  // Required variables
+  // Required variables - only required in production
   if (!process.env.DATABASE_URL) {
-    errors.push("DATABASE_URL is not set - database operations will fail");
+    if (process.env.NODE_ENV === 'production') {
+      errors.push("DATABASE_URL is not set - database operations will fail");
+    } else {
+      warnings.push("DATABASE_URL is not set - using development mode");
+    }
   }
 
   // Validate DATABASE_URL format if set

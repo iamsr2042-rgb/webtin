@@ -20,24 +20,24 @@ export async function initializeApp(): Promise<boolean> {
   logEnvironmentSummary();
 
   if (!envValidation.valid) {
-    console.error("[v0] ✗ Environment validation failed");
-    console.error("[v0] Fatal errors:");
-    envValidation.errors.forEach((error) => console.error("[v0]   - " + error));
-    return false;
+    console.warn("[v0] ⚠ Environment validation issues found");
+    console.warn("[v0] Warnings:");
+    envValidation.errors.forEach((error) => console.warn("[v0]   - " + error));
+    // Don't return false - allow app to run in development without database
   }
 
-  // Test database connection
+  // Test database connection (non-fatal if it fails)
   try {
     console.log("[v0] Testing database connection...");
     await prisma.$queryRaw`SELECT 1`;
     console.log("[v0] ✓ Database connection successful");
   } catch (error) {
-    console.error("[v0] ✗ Database connection failed:", error);
-    return false;
+    console.warn("[v0] ⚠ Database connection failed:", error instanceof Error ? error.message : 'Unknown error');
+    console.warn("[v0] App will run with limited functionality");
   }
 
   initialized = true;
-  console.log("[v0] ✓ Application initialized successfully");
+  console.log("[v0] ✓ Application initialized");
   console.log("[v0] ========================================");
 
   return true;

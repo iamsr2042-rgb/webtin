@@ -5,8 +5,24 @@ import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowRight, Code2, Zap, Shield, Users } from 'lucide-react';
+import { useEffect } from 'react';
 
 export default function Home() {
+  useEffect(() => {
+    // Initialize app on client side
+    const init = async () => {
+      try {
+        // Dynamic import to avoid server-side execution issues
+        const { initializeApp } = await import('@/lib/init');
+        await initializeApp();
+      } catch (error) {
+        console.warn('[v0] App init warning:', error instanceof Error ? error.message : 'Unknown error');
+        // Don't fail - app can still display UI
+      }
+    };
+    init();
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-background" suppressHydrationWarning>
       <Header />
